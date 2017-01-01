@@ -11,6 +11,7 @@ from .funcs import remove_empty_dir
 
 
 def tree(path, depth=2, topdown=True, followlinks=False, showhidden=False):
+    """A generator return a tuple with three elements (root, dirs, files)."""
     rt = []
     for root, dirs, files in os.walk(path, topdown=topdown, followlinks=followlinks):
         if not showhidden and File.is_hidden(root):
@@ -73,7 +74,7 @@ class File(object):
             os.rmdir(self.path)
 
     def remove_blank_dirs(self):
-        """remove blank dir and all blank subdirectories"""
+        """Remove blank dir and all blank subdirectories"""
         if self.is_blank():
             try:
                 os.rmdir(self.path)
@@ -207,6 +208,7 @@ class File(object):
         return tree(self.path, showhidden=showhidden)
 
     def walk(self, **kw):
+        """Call os.walk() without providing the first path argument."""
         return os.walk(self.path, **kw)
 
     def __repr__(self):
@@ -216,14 +218,13 @@ class File(object):
         return self.__repr__()
 
     def __call__(self):
-        """更新对象"""
+        """Refresh current File object"""
         return File(self._path, self.root)
 
-    def __getstate__(self):
-        """
-        用户自定义类可以通过提供 __getstate__() 和 __setstate__() 方法来绕过这些限制。
-        如果定义了这两个方法，pickle.dump() 就会调用 __getstate__() 获取序列化的对象。
-        类似的，__setstate__() 在反序列化时被调用。
-        """
-        return repr(self)
+    def __eq__(self, file):
+        """Return True if the absolute path is same"""
+        if isinstance(file, File):
+            return self.path == file.path
+        else:
+            return self.path == os.path.abspath(file)
 

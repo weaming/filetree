@@ -4,6 +4,8 @@ import os
 import errno
 
 def is_image(name, exts=None):
+    """return True if the name or path is endswith {jpg|png|gif|jpeg}"""
+
     default = ['jpg', 'png', 'gif', 'jpeg']
     if exts:
         default += exts
@@ -17,10 +19,6 @@ def is_image(name, exts=None):
 
 
 def iterable(iterator):
-    """
-    from collections import Iterable
-    return isinstance(iterator, Iterable)
-    """
     flag = True
     try:
         for _ in iterator:

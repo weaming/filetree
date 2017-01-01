@@ -11,10 +11,10 @@ build:
 install: build
 	pip install ./dist/filetree-*.tar.gz
 
-publish: build
-	python setup.py register
-	python setup.py sdist upload
-	python setup.py bdist_wheel --universal upload
+publish: clean build
+	twine upload dist/*
+
+clean:
 	rm -fr build dist filetree.egg-info
 
-.PHONY: init test build install publish
+.PHONY: init test build install publish clean
