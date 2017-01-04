@@ -15,7 +15,7 @@ setup(
     name = "filetree",
     version = version,
     description = 'Easier file tree.',
-    long_description = open('README.rst', 'r').read(),
+    long_description = open('README.rst', 'r').read() + open('HISTORY.rst', 'r').read(),
     author = 'weaming',
     author_email = 'garden.yuen@gmail.com',
     url = 'https://github.com/weaming/filetree',

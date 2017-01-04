@@ -42,3 +42,19 @@ class TestTree():
     def test_iterable(self):
         assert iterable('abc') is True
         assert iterable(None) is False
+
+    def test_contain(self):
+        f = File('./filetree')
+        assert '__init__.py' in f
+        for i in f:
+            assert i in f
+
+    def test_parent(self):
+        f = File('./filetree/__init__.py')
+        assert 'filetree' == f.parent_path
+        assert 'filetree' == f.parent()
+        assert 'filetree/..' == f.grandparent()
+        assert 'filetree/filetree' == f.n_parent_path(2)
+        assert File('a/b/c/d').n_parent_path(2) == 'b/c'
+        assert File('a/b/c/d').n_relative_path(3) == 'b/c/d'
+

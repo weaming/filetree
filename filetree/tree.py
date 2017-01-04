@@ -59,6 +59,38 @@ class File(object):
         if self.type == 'dir':
             self.namewoext = self.ext = None
 
+    @property
+    def parent_path(self):
+        """ return parent's path string """
+        return os.path.basename(self.dirname)
+
+    def parent(self):
+        """ return parent's File object """
+        return File(self.dirname)
+
+    @property
+    def grandparent_path(self):
+        """ return grandparent's path string """
+        return os.path.basename(os.path.join(self.path, '../..'))
+
+    def grandparent(self):
+        """ return grandparent's File object """
+        return File(os.path.join(self.path, '../..'))
+
+    def n_parent_paths(self, n):
+        """
+        return parent paths of n levels.
+        eg: File('a/b/c/d').n_parent_path(2) == 'b/c'
+        """
+        return os.path.relpath(os.path.join(self.path, '..'), os.path.join(self.path, *['..'] * (n+1)))
+
+    def n_relative_paths(self, n):
+        """
+        return relative paths of n levels, including basename.
+        eg: File('a/b/c/d').n_parent_path(3) == 'b/c/d'
+        """
+        return os.path.join(self.n_parent_paths(n-1), self.basename)
+
     def exists(self):
         return os.path.exists(self.path)
 
@@ -227,4 +259,11 @@ class File(object):
             return self.path == file.path
         else:
             return self.path == os.path.abspath(file)
+        return False
 
+    def __contains__(self, file):
+        if isinstance(file, File):
+            return file.path.startswith(self.path)
+        elif type(file) in (str, unicode):
+            return os.path.basename(file) in os.listdir(self.path)
+        return False
