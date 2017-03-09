@@ -54,7 +54,7 @@ class TestTree():
         assert 'filetree' == f.parent_path
         assert 'filetree' == f.parent()
         assert 'filetree/..' == f.grandparent()
-        assert 'filetree/filetree' == f.n_parent_path(2)
-        assert File('a/b/c/d').n_parent_path(2) == 'b/c'
-        assert File('a/b/c/d').n_relative_path(3) == 'b/c/d'
+        assert 'filetree/filetree' == f.n_parent_paths(2)
+        assert File('a/b/c/d').n_parent_paths(2) == 'b/c'
+        assert File('a/b/c/d').n_relative_paths(3) == 'b/c/d'
 

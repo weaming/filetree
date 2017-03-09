@@ -80,14 +80,14 @@ class File(object):
     def n_parent_paths(self, n):
         """
         return parent paths of n levels.
-        eg: File('a/b/c/d').n_parent_path(2) == 'b/c'
+        eg: File('a/b/c/d').n_parent_paths(2) == 'b/c'
         """
         return os.path.relpath(os.path.join(self.path, '..'), os.path.join(self.path, *['..'] * (n+1)))
 
     def n_relative_paths(self, n):
         """
         return relative paths of n levels, including basename.
-        eg: File('a/b/c/d').n_parent_path(3) == 'b/c/d'
+        eg: File('a/b/c/d').n_parent_paths(3) == 'b/c/d'
         """
         return os.path.join(self.n_parent_paths(n-1), self.basename)
 
@@ -110,8 +110,8 @@ class File(object):
         if self.is_blank():
             try:
                 os.rmdir(self.path)
-            except OSError:
-                pass
+            except OSError as e:
+                print(e)
         else:
             remove_empty_dir(self.path)
 
@@ -185,7 +185,7 @@ class File(object):
     def info(self):
         return os.stat(self.path)
 
-    def size(self, factor=1000):
+    def size_text(self, factor=1000):
         factor = float(factor)
         s = self.info.st_size
         unit = 'B'
@@ -202,6 +202,10 @@ class File(object):
             s /= factor
             unit = 'T'
         return '%s %s' % (s, unit)
+
+    @property
+    def size(self):
+        return self.info.st_size
 
     @property
     def ctime(self, tz=None):
