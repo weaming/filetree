@@ -40,24 +40,26 @@ def tree(path, depth=2, topdown=True, followlinks=False, showhidden=False):
 
 class File(object):
     def __init__(self, path, root=None):
-        _root = root or '.'
         if type(path) != str:
             raise TypeError("path isn't string!")
+
         self._path = path
         self._root = root
+
         self.path = os.path.abspath(path)
         self.isabs = os.path.isabs(path)
 
+        _root = root or '.'
         # 这里有顺序依赖
         self.dirname, self.basename = os.path.split(self.path)
         self.root = root or (self.dirname if self.isabs else _root)
         self.relpath = os.path.relpath(path, self.root)
-        self.namewoext, self.ext = os.path.splitext(self.basename)
+        self.name, self.ext = os.path.splitext(self.basename)
         self.ext = self.ext[1:]
         self.hidden = self.is_hidden(path)
 
         if self.type == 'dir':
-            self.namewoext = self.ext = None
+            self.name = self.ext = None
 
     @property
     def parent_path(self):
@@ -82,14 +84,16 @@ class File(object):
         return parent paths of n levels.
         eg: File('a/b/c/d').n_parent_paths(2) == 'b/c'
         """
-        return os.path.relpath(os.path.join(self.path, '..'), os.path.join(self.path, *['..'] * (n+1)))
+        rv = os.path.relpath(os.path.join(self.path, '..'), os.path.join(self.path, *['..'] * (n+1)))
+        return rv.replace('\\', '/')
 
     def n_relative_paths(self, n):
         """
         return relative paths of n levels, including basename.
         eg: File('a/b/c/d').n_parent_paths(3) == 'b/c/d'
         """
-        return os.path.join(self.n_parent_paths(n-1), self.basename)
+        rv = os.path.join(self.n_parent_paths(n-1), self.basename)
+        return rv.replace('\\', '/')
 
     def exists(self):
         return os.path.exists(self.path)
