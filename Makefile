@@ -2,9 +2,9 @@ init:
 	pip install -r requirements.txt
 
 test:
-	pytest tests
+	pytest tests -r P
 
-build: 
+build:
 	python setup.py sdist
 	python setup.py bdist_wheel --universal
 

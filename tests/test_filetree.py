@@ -18,6 +18,8 @@ class TestTree():
 
         for f in li:
             print(f)
+            if f.exists():
+                print(f.size)
             pprint(f.__dict__)
             print('=' * 100)
 
