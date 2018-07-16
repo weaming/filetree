@@ -7,7 +7,7 @@ import datetime
 import shutil
 
 from .funcs import is_image, iterable
-from .funcs import remove_empty_dir
+from .funcs import remove_empty_dir, human_size
 
 
 def tree(path, depth=2, topdown=True, followlinks=False, showhidden=False):
@@ -192,20 +192,7 @@ class File(object):
     def size_text(self, factor=1000):
         factor = float(factor)
         s = self.info.st_size
-        unit = 'B'
-        if s > factor:
-            s /= factor
-            unit = 'kB'
-        if s > factor:
-            s /= factor
-            unit = 'M'
-        if s > factor:
-            s /= factor
-            unit = 'G'
-        if s > factor:
-            s /= factor
-            unit = 'T'
-        return '%s %s' % (s, unit)
+        return human_size(s, factor)
 
     @property
     def size(self):
